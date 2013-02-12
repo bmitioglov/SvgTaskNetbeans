@@ -1,12 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author goodspeed
- */
 public class Otrezok {
     public Otrezok(double x1, double y1, double x2, double y2){
         this.x1 = x1;

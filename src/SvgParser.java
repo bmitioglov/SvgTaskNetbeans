@@ -1,27 +1,7 @@
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
- * @author goodspeed
- */
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,51 +13,26 @@ import javax.xml.parsers.SAXParser;
 
 // SAX
 import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class SvgParser {
 
-    public SvgParser(File file)
+    public SvgParser(File file) throws SAXException, ParserConfigurationException, IOException
     {
         this.file = file;
         
         SAXParserFactory factory = SAXParserFactory.newInstance();
-
         factory.setValidating(true);
         factory.setNamespaceAware(false);
+
         SAXParser parser;
+        parser = factory.newSAXParser();
 
-        InputStream xmlData = null;
-        try
-        {
-            //xmlData = new FileInputStream("test.svg");
-
-            parser = factory.newSAXParser();
-            MyParser myparser = new MyParser();
-            parser.parse(file, myparser);
-            map = myparser.getPaths();
-            listOtr = myparser.getList();
-            
-            
-        } catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-            // обработки ошибки, файл не найден
-        } catch (ParserConfigurationException e)
-        {
-            e.printStackTrace();
-            // обработка ошибки Parser
-        } catch (SAXException e)
-        {
-            e.printStackTrace();
-            // обработка ошибки SAX
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-            // обработка ошибок ввода
-        } 
+        MyParser myparser = new MyParser();
+        parser.parse(file, myparser);
+        map = myparser.getPaths();
+        listOtr = myparser.getList();
         
     }
     public Map<String,Double> getPaths(){
@@ -106,7 +61,7 @@ class MyParser extends DefaultHandler {
             if (attributes.getValue("d")!=null){
                 map.put(attributes.getValue("id"), segmLength(attributes.getValue("d")));
             }
-            //
+            
         super.startElement(uri, localName, qName, attributes);
     }
     

@@ -5,20 +5,10 @@ import java.awt.geom.*;
 import java.util.List;
 
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author goodspeed
- */
 public class DrawPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form DrawPanel
-     */
+
     
     public DrawPanel(List<Otrezok> listOtr, JFrame frame) {
         initComponents();
