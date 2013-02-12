@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.filechooser.FileFilter;
 
 
 public class FirstPanel extends javax.swing.JPanel {
@@ -16,6 +17,7 @@ public class FirstPanel extends javax.swing.JPanel {
      */
     public FirstPanel(JFrame frame) {
         this.frame = frame;
+        myFilter = new MyFilter("svg");
         //chooser = new JFileChooser();
         initComponents();
     }
@@ -87,30 +89,35 @@ public class FirstPanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         chooser = new JFileChooser();
+        chooser.setFileFilter(myFilter);
         chooser.setCurrentDirectory(new File("."));
-        //chooser.setSelectedFile(new File("test.svg"));
-        chooser.showOpenDialog(this);
-        
-        svgFile = chooser.getSelectedFile();
-        jLabel2.setText("Выбранный файл: "+svgFile.getName());
-        chooser.setVisible(false);
-        //jLabel1.setText(svgFile.getName());
-        
-        
+        int status = chooser.showOpenDialog(this);
+        if (status == JFileChooser.APPROVE_OPTION){
+            svgFile = chooser.getSelectedFile();
+            jLabel2.setText("Выбранный файл: "+svgFile.getName());
+            chooser.setVisible(false);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jNextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jNextButtonActionPerformed
         // TODO add your handling code here:
-        SvgParser svgp = new SvgParser(svgFile);
-        map = svgp.getPaths();
-        listOtr = svgp.getList();
-        ResultPanel rpanel = new ResultPanel(map,listOtr,frame);
-        this.removeAll();
-        this.updateUI();
-        frame.remove(this);
-        frame.add(rpanel);   
-        revalidate();
-        repaint();
+        if (svgFile == null)
+        {
+            jLabel2.setText("Выберите файл!");
+        } else
+        {
+            SvgParser svgp = new SvgParser(svgFile);
+            map = svgp.getPaths();
+            listOtr = svgp.getList();
+            ResultPanel rpanel = new ResultPanel(map,listOtr,frame);
+            this.removeAll();
+            this.updateUI();
+            frame.remove(this);
+            frame.add(rpanel);   
+            revalidate();
+            repaint(); 
+        }
+        
     }//GEN-LAST:event_jNextButtonActionPerformed
     
     
@@ -125,6 +132,36 @@ public class FirstPanel extends javax.swing.JPanel {
     private JFileChooser chooser;
     private Map<String,Double> map;
     private List<Otrezok> listOtr;
+    private MyFilter myFilter;
     
 
 }
+
+class MyFilter extends FileFilter{
+    
+    public MyFilter(String ext){
+        extension = ext;
+    }
+    
+    @Override
+    public boolean accept(File f){
+        if (f.isDirectory()) {
+            return true;
+        }
+        String path = f.getAbsolutePath().toLowerCase();
+        if ((path.endsWith(extension) && (path.charAt(path.length() - extension.length() - 1)) == '.')) {
+          return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    @Override
+    public String getDescription(){
+      return "SVG files";  
+    }
+    
+    String extension;
+}
+
