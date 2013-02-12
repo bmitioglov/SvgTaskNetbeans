@@ -15,9 +15,9 @@ public class DrawPanel extends javax.swing.JPanel {
         this.frame = frame;
         this.listOtr = listOtr;
         frame.pack();
-        frame.setSize(1200, 760);
+        frame.setSize(1200, 730);
         frame.setResizable(true);
-        
+        frame.setLocation(0, 0);
     }
     
     @Override
