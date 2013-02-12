@@ -1,6 +1,9 @@
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.*;
 import java.util.List;
-import javax.swing.JFrame;
+
 
 /*
  * To change this template, choose Tools | Templates
@@ -16,12 +19,26 @@ public class DrawPanel extends javax.swing.JPanel {
     /**
      * Creates new form DrawPanel
      */
+    
     public DrawPanel(List<Otrezok> listOtr, JFrame frame) {
         initComponents();
         this.frame = frame;
         this.listOtr = listOtr;
+        frame.pack();
+        frame.setSize(1200, 760);
+        frame.setResizable(true);
         
     }
+    
+    @Override
+    public void paintComponent(Graphics g){
+        Graphics2D g2 = (Graphics2D)g;
+        for(Otrezok otr: listOtr){
+            line = new Line2D.Double(otr.getX1(),otr.getY1(),otr.getX2(),otr.getY2());
+            g2.draw(line);
+        }
+    }
+    
 
     
     @SuppressWarnings("unchecked")
@@ -43,4 +60,5 @@ public class DrawPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
     List<Otrezok> listOtr;
     JFrame frame;
+    Line2D line;
 }

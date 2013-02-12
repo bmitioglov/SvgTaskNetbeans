@@ -103,9 +103,7 @@ class MyParser extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         if(qName.equals("path"))
-            //System.out.println("id отрезка "+attributes.getValue("id"));
             if (attributes.getValue("d")!=null){
-                //System.out.println("Длина отрезка "+segmLength(attributes.getValue("d")));
                 map.put(attributes.getValue("id"), segmLength(attributes.getValue("d")));
             }
             //
@@ -153,7 +151,7 @@ class MyParser extends DefaultHandler {
         Otrezok otr = new Otrezok(x1,y1,x2,y2);         //добавляем отрезки в список для дальнейшей отрисовки
         listOtr.add(otr);                           
         
-        double dlina = Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1), 2));
+        double dlina = Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1), 2)); //вычисляем длину
         return dlina;
     }
     

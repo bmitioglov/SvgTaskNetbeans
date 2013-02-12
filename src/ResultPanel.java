@@ -105,9 +105,10 @@ public class ResultPanel extends javax.swing.JPanel {
         this.removeAll();
         this.updateUI();
         frame.remove(this);
-        frame.add(dpanel);   
         revalidate();
         repaint();
+        frame.add(dpanel);   
+        
     }//GEN-LAST:event_jDrawButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
