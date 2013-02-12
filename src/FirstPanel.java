@@ -1,13 +1,19 @@
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 
 public class FirstPanel extends javax.swing.JPanel {
@@ -18,7 +24,6 @@ public class FirstPanel extends javax.swing.JPanel {
     public FirstPanel(JFrame frame) {
         this.frame = frame;
         myFilter = new MyFilter("svg");
-        //chooser = new JFileChooser();
         initComponents();
     }
 
@@ -62,14 +67,14 @@ public class FirstPanel extends javax.swing.JPanel {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(158, 206, Short.MAX_VALUE)
+                .addGap(184, 229, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(84, 84, 84))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(166, 166, 166))))
+                        .addGap(143, 143, 143))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,11 +94,13 @@ public class FirstPanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         chooser = new JFileChooser();
+        chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(myFilter);
         chooser.setCurrentDirectory(new File("."));
         int status = chooser.showOpenDialog(this);
         if (status == JFileChooser.APPROVE_OPTION){
             svgFile = chooser.getSelectedFile();
+            jLabel2.setForeground(Color.black);
             jLabel2.setText("Выбранный файл: "+svgFile.getName());
             chooser.setVisible(false);
         }
@@ -103,19 +110,31 @@ public class FirstPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (svgFile == null)
         {
+            jLabel2.setForeground(Color.red);
             jLabel2.setText("Выберите файл!");
         } else
         {
-            SvgParser svgp = new SvgParser(svgFile);
-            map = svgp.getPaths();
-            listOtr = svgp.getList();
-            ResultPanel rpanel = new ResultPanel(map,listOtr,frame);
-            this.removeAll();
-            this.updateUI();
-            frame.remove(this);
-            frame.add(rpanel);   
-            revalidate();
-            repaint(); 
+            try {
+                SvgParser svgp = new SvgParser(svgFile);
+                map = svgp.getPaths();
+                listOtr = svgp.getList();
+                ResultPanel rpanel = new ResultPanel(map,listOtr,frame);
+                this.removeAll();
+                this.updateUI();
+                frame.remove(this);
+                frame.add(rpanel);   
+                revalidate(); 
+                repaint();
+            } catch (SAXException ex) {
+                jLabel2.setForeground(Color.red);
+                jLabel2.setText("SAXException! Выберите другой файл");
+            } catch (ParserConfigurationException ex) {
+                jLabel2.setForeground(Color.red);
+                jLabel2.setText("ParserConfigurationException! Выберите другой файл");
+            } catch (IOException ex) {
+                jLabel2.setForeground(Color.red);
+                jLabel2.setText("IOException! Выберите другой файл");
+            }
         }
         
     }//GEN-LAST:event_jNextButtonActionPerformed
@@ -161,7 +180,6 @@ class MyFilter extends FileFilter{
     public String getDescription(){
       return "SVG files";  
     }
-    
     String extension;
 }
 
